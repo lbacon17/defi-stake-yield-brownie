@@ -1,9 +1,10 @@
-import {useEthers} from "@usedapp/core"
+import {useEffect, useState} from "react"
+import {useContractFunction, useEthers} from "@usedapp/core"
 import { constants, utils } from "ethers"
 import TokenFarm from "../chain-info/contracts/TokenFarm.json"
 import ERC20 from "../chain-info/contracts/MockERC20.json"
 import {Contract} from "@ethersproject/contracts"
-import {networkMapping} from "../chain-info/deployments/map.json"
+import networkMapping from "../chain-info/deployments/map.json"
 
 export const useStakeTokens = (tokenAddress: string) => {
     // address
@@ -20,4 +21,14 @@ export const useStakeTokens = (tokenAddress: string) => {
     const erc20Contract = new Contract(tokenAddress, erc20Interface)
     // approve
     // stake tokens
+    const {send: approveErc20Send, state: approveErc20State} = useContractFunction(erc20Contract, "approve", {
+        transactionName: "Approve ERC20 transfer.",
+    })
+    const approve = (amount: string) => {
+        return approveErc20Send(tokenFarmAddress, amount)
+    }
+
+    const [state, setState] = useState(approveErc20State)
+
+    return {approve, approveErc20State}
 }
