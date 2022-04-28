@@ -13,7 +13,7 @@ function App() {
       <Container maxWidth='md'>
         <div>Hi!</div>
         <Main />
-      </Container>ß
+      </Container>
     </DAppProvider>
   );
 }
